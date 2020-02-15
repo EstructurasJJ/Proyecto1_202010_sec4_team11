@@ -2,6 +2,7 @@ package model.logic;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -209,7 +210,46 @@ public class Modelo
 		}
 	}
 	
+	//----------------------------------------------------------------------
+	//-----------------------REQUERIMIENTOS ESTUDIANTE A--------------------
+	//----------------------------------------------------------------------
+	
+	//TODO Juanjo
+	
+	public <T>T primeroPorLocalidad(String localidad)
+	{
+		return (T)null;
+	}
+	
+	public ListaEnlazadaQueue<Comparendo> darComparendosPorFecha(String fecha)
+	{
+		return null;
+	}
+	
+	public ArrayList compararCodPorFecha(String cod, String fecha1, String fecha2)
+	{
+		return null;
+	}
+	
+	
+	//----------------------------------------------------------------------
+	//-----------------------REQUERIMIENTOS ESTUDIANTE B--------------------
+	//----------------------------------------------------------------------
+	
 
+	//----------------------------------------------------------------------
+	//--------------------------REQUERIMIENTOS AMBOS------------------------
+	//----------------------------------------------------------------------
 	
+	//TODO Ambos
 	
+	public ArrayList codEntreFechasEnLocalidad(String localidad, String menorFecha, String mayorFecha)
+	{
+		return null;
+	}
+	
+	public ArrayList maxNEntreFechas(int n, String menorFecha, String mayorFecha)
+	{
+		return null;
+	}
 }
