@@ -2,6 +2,7 @@ package model.logic;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -12,24 +13,25 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSyntaxException;
 
 import model.data_structures.ListaEnlazadaQueue;
-import model.data_structures.ListaEnlazadaSimple;
 import model.data_structures.Node;
 
-//TODO Ambos
 
 public class Modelo 
 {
 	private String parteDelComparendo; 
 	private Comparendo compaAgregar;
+	private boolean coordenadas = false;
 	
-	//TODO Bobby
+	private double minLatitud = 1000000000;
+	private double minLongitud = 1000000000;
+	private double maxLatitud = -1000000000;
+	private double maxLongitud = -1000000000;
+	
 	private ListaEnlazadaQueue<Comparendo> booty = new ListaEnlazadaQueue<Comparendo>();
 
 	public Modelo()
 	{
 		parteDelComparendo = "";
-		
-		//TODO Bobby
 		booty = new ListaEnlazadaQueue<Comparendo>();
 	}
 	
@@ -39,14 +41,38 @@ public class Modelo
 		return booty;
 	}
 	
-	//TODO Bobby
-	
 	public int darTamanio()
 	{
 		return booty.darTamanio();
 	}
 	
-	//TODO Ambos
+	public double darMinLatitud()
+	{
+		return minLatitud;
+	}
+	public double darMinLongitud()
+	{
+		return minLongitud;
+	}
+	public double darMaxLatitud()
+	{
+		return maxLatitud;
+	}
+	public double darMaxLongitud()
+	{
+		return maxLongitud;
+	}
+	
+	public Comparendo PrimerComparendo()
+	{
+		return booty.darPrimerElemento().darInfoDelComparendo();
+	}
+	
+	public Comparendo UltimoComparendo()
+	{
+		return booty.darUltimoElemento().darInfoDelComparendo();
+	}
+	
 	public void leerGeoJson(String pRuta) 
 	{	
         JsonParser parser = new JsonParser();
@@ -66,9 +92,9 @@ public class Modelo
 
 	}
 	
-	//TODO Ambos
 	private void dumpJSONElement(JsonElement elemento) 
 	{
+		
 		
 		if (elemento.isJsonObject()) 
 		{
@@ -147,19 +173,14 @@ public class Modelo
 			else if (parteDelComparendo.equals("LOCALIDAD"))
 			{				
 				compaAgregar.asignarLocalidad(valor.getAsString());
-				
-				//System.out.println(valor);
-				//System.out.println("###______________###");
-				
-				booty.enqueue(compaAgregar);
-				
-				
+				//System.out.println(valor);	
 				parteDelComparendo = "";
-				compaAgregar = null;
-				
-				//System.out.println("////////////////////////////////////////AGREGADO////////////////////////////////////////");
-				
 			}
+			else if (parteDelComparendo.equals("coordinates"))
+			{
+				agregarCoordenada(valor.getAsDouble());				
+			}
+
 	    } 
 		else if (elemento.isJsonNull()) 
 		{
@@ -172,7 +193,6 @@ public class Modelo
 		
 	}
 	
-	//TODO Ambos
 	public void componentesDelComparendo(String palabra)
 	{
 		if (palabra.equals("OBJECTID"))
@@ -207,9 +227,121 @@ public class Modelo
 		{
 			parteDelComparendo = "LOCALIDAD";
 		}
+		else if (palabra.equals("coordinates"))
+		{
+			parteDelComparendo = "coordinates";
+		}
 	}
 	
+	public void agregarCoordenada(double pCor)
+	{
+		if(coordenadas == false)
+		{
+			compaAgregar.asignarLongitud(pCor);
+			//System.out.println("Longitud: " + pCor);
+			
+			if (pCor < minLongitud)
+			{
+				minLongitud = pCor;
+			}
+			else if (pCor > maxLongitud)
+			{
+				maxLongitud = pCor;
+			}
+			
+			coordenadas = true;
+		}
 
+		else
+		{
+			compaAgregar.asignarLatitud(pCor);
+			//System.out.println("Latitud: " + pCor);
+			
+			if (pCor < minLatitud)
+			{
+				minLatitud = pCor;
+			}
+			else if (pCor > maxLatitud)
+			{
+				maxLatitud = pCor;
+			}
+			
+			//AGREGAR//
+			
+			coordenadas = false;
+			parteDelComparendo = "";
+			
+			booty.enqueue(compaAgregar);
+			compaAgregar = null;
+			
+			//System.out.println("///AGREGADO///");
+			
+		}
+
+	}
 	
+	
+	// METODOS A TERMINAR PARA LA ENTREGA FINAL //
+	
+	public int compareTo(Comparendo Compi)
+	{
+		return 0;
+	}
+	
+	//JuanJo
+	
+	public Comparendo darPrimeroLocalidad (String loca)
+	{
+		return null;
+	}
+	public ListaEnlazadaQueue<Comparendo> CompisFecha (String fecha)
+	{
+		return null;
+	}
+	public ArrayList<Comparendo> InfraccionEnFechaDada(String fecha1, String fecha2)
+	{
+		return null;
+	}
+	
+	//Bobby
+	
+	public Comparendo darPrimeroInfraccion (String infra)
+	{
+		return null;
+	}
+	public ListaEnlazadaQueue<Comparendo> CompisInfraccion (String infra)
+	{
+		return null;
+	}
+	public ArrayList<Comparendo> InfraccionEnTipoServicio()
+	{
+		return null;
+	}
+	
+	//Ambos
+	
+	public ArrayList<Comparendo> InfraccionRepetidos(String fechaMin, String fechaMax)
+	{
+		return null;
+	}
+	public ArrayList<Comparendo> InfraccionTopN(int N, String fechaMin, String fechaMax)
+	{
+		return null;
+	}
+	public ArrayList<Comparendo> Histograma()
+	{
+		return null;
+	}
+	
+	//Util
+	
+	public ArrayList<Comparendo> filtrarInfracciones()
+	{
+		return null;
+	}
+	public void ordenamiento(Comparable[] a)
+	{
+		
+	}
 	
 }
