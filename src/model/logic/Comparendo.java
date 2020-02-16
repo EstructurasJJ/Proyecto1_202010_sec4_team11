@@ -15,6 +15,9 @@ public class Comparendo
 	private String DES_INFRAC;
 	private String LOCALIDAD;
 	
+	private double latitud;
+	private double longitud; 
+	
 	public Comparendo ()
 	{
 		OBJECTID = 0;
@@ -91,6 +94,23 @@ public class Comparendo
 	public void asignarLocalidad(String i)
 	{
 		LOCALIDAD = i;
+	}
+	
+	public double darLatitud()
+	{
+		return latitud;
+	}
+	public double darLongitud()
+	{
+		return longitud;
+	}
+	public void asignarLatitud(double i)
+	{
+		latitud = i;
+	}
+	public void asignarLongitud(double i)
+	{
+		longitud = i; 
 	}
 	
 }

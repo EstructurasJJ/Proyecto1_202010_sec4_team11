@@ -37,49 +37,24 @@ public class Controller {
 			switch(option)
 			{
 			case 1:
-				modelo.leerGeoJson(JUEGUEMOS);
+				modelo.leerGeoJson(RUTAGEOJASON);
+				
 				view.printMessage("Archivo GeoJSon Cargado");
-				view.printMessage("Numero actual de comparendos " + modelo.darTamanio() + "\n---------");						
+				view.printMessage("Numero actual de comparendos " + modelo.darTamanio() + "\n----------");
+				
+				view.printMessage("El Minimax es: (" + modelo.darMinLatitud() + " , " + modelo.darMinLongitud() + ")(" + modelo.darMaxLatitud() + " ," + modelo.darMaxLongitud() + ")" + "\n----------");
+				
+				view.printMessage("La información del máx Object Id es: ");
+				view.printMessage("Object Id: " + modelo.UltimoComparendo().darObjectid());
+				view.printMessage("Fecha Hora: " + modelo.UltimoComparendo().darFecha_Hora());
+				view.printMessage("Infracción: " + modelo.UltimoComparendo().darInfraccion());
+				view.printMessage("Clase Vehiculo: " + modelo.UltimoComparendo().darClase_Vehi());
+				view.printMessage("Tipo Servicio: " + modelo.UltimoComparendo().darTipo_Servicio());
+				view.printMessage("Localidad: " + modelo.UltimoComparendo().darLocalidad() + "\n----------");
+				
 				break;
 
 			case 2:
-
-
-				break;
-
-			case 3:
-
-
-				break;
-			case 4:
-
-
-				break;
-			case 5:
-
-
-				break;
-			case 6:
-
-
-				break;
-			case 7:
-
-
-				break;
-			case 8:
-
-
-				break;
-			case 9:
-
-
-				break;
-			case 10:
-
-
-				break;
-			case 11:
 				view.printMessage("--------- \n Hasta pronto !! \n---------"); 
 				lector.close();
 				fin = true;
