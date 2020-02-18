@@ -106,6 +106,7 @@ public class TestListaEnlazadaQueue
 	@Test
 	public void testCargaDeDatos()
 	{
+		setUp1();
 		assertTrue(modelo.darDatos()!=null);
 		assertEquals(20, modelo.darTamanio());
 	}
@@ -113,6 +114,7 @@ public class TestListaEnlazadaQueue
 	@Test
 	public void testProbarNodoCorrecto()
 	{
+		setUp1();
 		assertTrue(modelo.darDatos().darPrimerElemento()!=null);
 		assertTrue(cola.darPrimerElemento()!=null);
 	}
