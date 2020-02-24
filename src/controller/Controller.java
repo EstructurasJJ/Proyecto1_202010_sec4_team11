@@ -1,5 +1,6 @@
 package controller;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 
@@ -8,6 +9,7 @@ import model.data_structures.ListaEnlazadaQueue;
 import model.logic.Comparendo;
 import model.logic.Modelo;
 import view.View;
+import model.data_structures.Node;
 
 public class Controller {
 
@@ -37,13 +39,13 @@ public class Controller {
 			switch(option)
 			{
 			case 1:
-				modelo.leerGeoJson(RUTAGEOJASON);
-				
+				modelo.leerGeoJson(JUEGUEMOS);
+
 				view.printMessage("Archivo GeoJSon Cargado");
 				view.printMessage("Numero actual de comparendos " + modelo.darTamanio() + "\n----------");
-				
+
 				view.printMessage("El Minimax es: (" + modelo.darMinLatitud() + " , " + modelo.darMinLongitud() + ")(" + modelo.darMaxLatitud() + " ," + modelo.darMaxLongitud() + ")" + "\n----------");
-				
+
 				view.printMessage("La información del máx Object Id es: ");
 				view.printMessage("Object Id: " + modelo.UltimoComparendo().darObjectid());
 				view.printMessage("Fecha Hora: " + modelo.UltimoComparendo().darFecha_Hora());
@@ -51,10 +53,135 @@ public class Controller {
 				view.printMessage("Clase Vehiculo: " + modelo.UltimoComparendo().darClase_Vehi());
 				view.printMessage("Tipo Servicio: " + modelo.UltimoComparendo().darTipo_Servicio());
 				view.printMessage("Localidad: " + modelo.UltimoComparendo().darLocalidad() + "\n----------");
-				
+
 				break;
 
 			case 2:
+
+				System.out.println("Por favor ingrese la localidad del código a buscar");
+				String a="";
+				dato = lector.next();
+
+				a+=dato;
+
+				Comparendo r=modelo.darPrimeroLocalidad(a);
+
+				if (r!=null)
+				{
+					System.out.println("El primer comparendo en "+dato+" fue el de los siguientes datos:");
+					System.out.println(r.darObjectid());
+					System.out.println(r.darFecha_Hora());
+					System.out.println(r.darInfraccion());
+					System.out.println(r.darClase_Vehi());
+					System.out.println(r.darTipo_Servicio());
+					System.out.println(r.darLocalidad());
+				}
+				else
+				{
+					System.out.println("No hay ningún comparendo en la localidad dada");
+				}
+
+				break;
+
+			case 3:
+
+				System.out.println("Por favor ingrese la fecha");
+
+				dato = lector.next();
+
+
+				ListaEnlazadaQueue<Comparendo> cola=modelo.CompisFecha(dato);
+
+				ArrayList<String> cods = new ArrayList<String>();
+
+				if (cola.darPrimerElemento()!=null)
+				{
+					Node<Comparendo> actual=cola.darPrimerElemento();
+
+					while (actual!=null)
+					{
+						cods.add(actual.darInfoDelComparendo().darInfraccion());
+						actual=actual.darSiguiente();
+					}
+
+					Comparable[] aOrdenar=modelo.generarCopiaCods(cods);
+					modelo.ordenamientoPorQuickSort(aOrdenar);
+
+					actual=cola.darPrimerElemento();
+
+					while (actual!=null)
+					{
+						System.out.println("----------------------------------------------");
+						System.out.println(actual.darInfoDelComparendo().darObjectid());
+						System.out.println(actual.darInfoDelComparendo().darFecha_Hora());
+						System.out.println(actual.darInfoDelComparendo().darInfraccion());
+						System.out.println(actual.darInfoDelComparendo().darClase_Vehi());
+						System.out.println(actual.darInfoDelComparendo().darTipo_Servicio());
+						System.out.println(actual.darInfoDelComparendo().darLocalidad());
+						System.out.println("-----------------------------------------------");
+
+
+						actual=actual.darSiguiente();
+					}
+
+					System.out.println("Se encontraron un total de "+cola.darTamanio()+" comparendos");
+				}
+				else
+				{
+					System.out.println("No se encontraron comparendos para esa fecha");
+				}
+
+				break;
+
+			case 4: 
+
+				System.out.println("Por favor ingrese la primera fecha");
+				dato = lector.next();
+				
+				System.out.println("Por favor ingrese la segunda fecha");
+				String dato2=lector.next();
+
+				ArrayList<String[]> datos=modelo.infraccionEnFechaDada(dato, dato2);
+				
+				System.out.println("Infracción     |   "+dato+"   |   "+dato2);
+				
+				int k=0;
+				
+				while (k<datos.size())
+				{
+					System.out.println(datos.get(k)[0]+"            |"+datos.get(k)[1]+"              |"+datos.get(k)[2]);
+					k++;
+				}
+				
+				break;
+
+			case 8:
+				
+				System.out.println("Ingrese la localidad a buscar");
+				dato = lector.next();
+				
+				System.out.println("Ingrese la fecha 1 del intervalo");
+				String fecha1 = lector.next();
+				System.out.println("Ingrese la fecha 2 del intervalo");
+				String fecha2=lector.next();
+				
+				ArrayList<String[]> resp=modelo.InfraccionRepetidos(fecha1, fecha2, dato);
+				
+				System.out.println("Infracción  |   Comparendos");
+				
+				int b=0;
+				
+				while (b<resp.size())
+				{
+					System.out.println(resp.get(b)[0]+"         | "+resp.get(b)[1]);
+					b++;
+				}
+				
+				break;
+				
+				
+				
+			case 11:
 				view.printMessage("--------- \n Hasta pronto !! \n---------"); 
 				lector.close();
 				fin = true;
