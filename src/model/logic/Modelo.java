@@ -313,25 +313,61 @@ public class Modelo
 
 
 
-	public ListaEnlazadaQueue<Comparendo> CompisFecha (String fecha)
+	public ArrayList<ListaEnlazadaQueue<Comparendo>> CompisFecha (String fecha)
 	{
-		ListaEnlazadaQueue<Comparendo> respuesta=new ListaEnlazadaQueue<>();
+		ArrayList<ListaEnlazadaQueue<Comparendo>> respuesta=new ArrayList<ListaEnlazadaQueue<Comparendo>>();
 		Node<Comparendo> actual=booty.darPrimerElemento();
+		ArrayList<String> codsComparendos=new ArrayList<String>();
+		int pos;
 
 		while (actual!=null)
 		{
 			if(actual.darInfoDelComparendo().darFecha_Hora().equals(fecha))
 			{
-				respuesta.enqueue(actual.darInfoDelComparendo());
+				
+				if (darPos(actual.darInfoDelComparendo().darInfraccion(), codsComparendos)>=0)
+				{
+					pos=darPos(actual.darInfoDelComparendo().darInfraccion(), codsComparendos);
+					
+					respuesta.get(pos).enqueue(actual.darInfoDelComparendo());
+				}
+				else
+				{
+					ListaEnlazadaQueue<Comparendo> parcial= new ListaEnlazadaQueue<Comparendo>();
+					parcial.enqueue(actual.darInfoDelComparendo());
+					respuesta.add(parcial);					
+					codsComparendos.add(actual.darInfoDelComparendo().darInfraccion());
+				}
+
 			}
 
 			actual=actual.darSiguiente();
 		}
 
+
+		Comparable[] copia = generarCopiaCods(codsComparendos);
+		ordenamientoPorQuickSort(copia);
+		
+
+		int k=0,p;
+		ListaEnlazadaQueue<Comparendo> viejo, nuevo;
+		
+		while (k<respuesta.size())
+		{
+			String codi=respuesta.get(k).darPrimerElemento().darInfoDelComparendo().darInfraccion();
+			p=buscarBinarioPorCod(codi, copia);
+
+			viejo=respuesta.get(k);
+			nuevo=respuesta.get(p);
+			respuesta.set(k, nuevo);
+			respuesta.set(p, viejo);
+			k++;
+		}
+
 		return respuesta;
 	}
-	
-	
+
+
 	public ArrayList<String[]> infraccionEnFechaDada(String fecha1, String fecha2)
 	{
 		int pos=0;
@@ -549,7 +585,7 @@ public class Modelo
 
 	public ArrayList<String[]> InfraccionRepetidos(String fechaMin, String fechaMax, String localidad)
 	{
-		
+
 		int pos=0;
 		String[] arrAux=new String[2];
 		ArrayList<String[]> respuesta=new ArrayList<String[]>();
@@ -581,8 +617,8 @@ public class Modelo
 
 			actual=actual.darSiguiente();
 		}
-		
-		
+
+
 		//Hasta este punto se llenaron las listas con los códigos, ahora se ordenan
 		Comparable[] aOrdenar = generarCopiaCods(codsComparendos);
 		ordenamientoPorQuickSort(aOrdenar);
@@ -601,12 +637,12 @@ public class Modelo
 			respuesta.set(p, viejo);
 			a=a+1;
 		}
-		
+
 		return respuesta;
 	}
-	
-	
-	
+
+
+
 	public ArrayList<Comparendo> InfraccionTopN(int N, String fechaMin, String fechaMax)
 	{
 		return null;

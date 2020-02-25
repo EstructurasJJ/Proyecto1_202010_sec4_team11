@@ -39,7 +39,7 @@ public class Controller {
 			switch(option)
 			{
 			case 1:
-				modelo.leerGeoJson(JUEGUEMOS);
+				modelo.leerGeoJson(RUTAGEOJASON);
 
 				view.printMessage("Archivo GeoJSon Cargado");
 				view.printMessage("Numero actual de comparendos " + modelo.darTamanio() + "\n----------");
@@ -85,46 +85,40 @@ public class Controller {
 
 			case 3:
 
+				int contador=0;
 				System.out.println("Por favor ingrese la fecha");
 
 				dato = lector.next();
 
 
-				ListaEnlazadaQueue<Comparendo> cola=modelo.CompisFecha(dato);
+				ArrayList<ListaEnlazadaQueue<Comparendo>> cola=modelo.CompisFecha(dato);
 
-				ArrayList<String> cods = new ArrayList<String>();
-
-				if (cola.darPrimerElemento()!=null)
+				if (cola.size()>0)
 				{
-					Node<Comparendo> actual=cola.darPrimerElemento();
-
-					while (actual!=null)
+					int z=0;
+					while (z<cola.size())
 					{
-						cods.add(actual.darInfoDelComparendo().darInfraccion());
-						actual=actual.darSiguiente();
+
+						Node<Comparendo> primero=cola.get(z).darPrimerElemento();
+
+						while(primero!=null)
+						{
+							System.out.println("----------------------------------------------");
+							System.out.println(primero.darInfoDelComparendo().darObjectid());
+							System.out.println(primero.darInfoDelComparendo().darFecha_Hora());
+							System.out.println(primero.darInfoDelComparendo().darInfraccion());
+							System.out.println(primero.darInfoDelComparendo().darClase_Vehi());
+							System.out.println(primero.darInfoDelComparendo().darTipo_Servicio());
+							System.out.println(primero.darInfoDelComparendo().darLocalidad());
+							System.out.println("------------------------------------------------");
+							
+							primero=primero.darSiguiente();
+							contador++;
+						}
+						z++;
 					}
 
-					Comparable[] aOrdenar=modelo.generarCopiaCods(cods);
-					modelo.ordenamientoPorQuickSort(aOrdenar);
-
-					actual=cola.darPrimerElemento();
-
-					while (actual!=null)
-					{
-						System.out.println("----------------------------------------------");
-						System.out.println(actual.darInfoDelComparendo().darObjectid());
-						System.out.println(actual.darInfoDelComparendo().darFecha_Hora());
-						System.out.println(actual.darInfoDelComparendo().darInfraccion());
-						System.out.println(actual.darInfoDelComparendo().darClase_Vehi());
-						System.out.println(actual.darInfoDelComparendo().darTipo_Servicio());
-						System.out.println(actual.darInfoDelComparendo().darLocalidad());
-						System.out.println("-----------------------------------------------");
-
-
-						actual=actual.darSiguiente();
-					}
-
-					System.out.println("Se encontraron un total de "+cola.darTamanio()+" comparendos");
+					System.out.println("Se encontraron un total de "+contador+" comparendos");
 				}
 				else
 				{
@@ -137,50 +131,50 @@ public class Controller {
 
 				System.out.println("Por favor ingrese la primera fecha");
 				dato = lector.next();
-				
+
 				System.out.println("Por favor ingrese la segunda fecha");
 				String dato2=lector.next();
 
 				ArrayList<String[]> datos=modelo.infraccionEnFechaDada(dato, dato2);
-				
+
 				System.out.println("Infracción     |   "+dato+"   |   "+dato2);
-				
+
 				int k=0;
-				
+
 				while (k<datos.size())
 				{
 					System.out.println(datos.get(k)[0]+"            |"+datos.get(k)[1]+"              |"+datos.get(k)[2]);
 					k++;
 				}
-				
+
 				break;
 
 			case 8:
-				
+
 				System.out.println("Ingrese la localidad a buscar");
 				dato = lector.next();
-				
+
 				System.out.println("Ingrese la fecha 1 del intervalo");
 				String fecha1 = lector.next();
 				System.out.println("Ingrese la fecha 2 del intervalo");
 				String fecha2=lector.next();
-				
+
 				ArrayList<String[]> resp=modelo.InfraccionRepetidos(fecha1, fecha2, dato);
-				
+
 				System.out.println("Infracción  |   Comparendos");
-				
+
 				int b=0;
-				
+
 				while (b<resp.size())
 				{
 					System.out.println(resp.get(b)[0]+"         | "+resp.get(b)[1]);
 					b++;
 				}
-				
+
 				break;
-				
-				
-				
+
+
+
 			case 11:
 				view.printMessage("--------- \n Hasta pronto !! \n---------"); 
 				lector.close();
