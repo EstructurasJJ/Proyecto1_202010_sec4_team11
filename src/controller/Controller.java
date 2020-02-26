@@ -111,7 +111,7 @@ public class Controller {
 							System.out.println(primero.darInfoDelComparendo().darTipo_Servicio());
 							System.out.println(primero.darInfoDelComparendo().darLocalidad());
 							System.out.println("------------------------------------------------");
-							
+
 							primero=primero.darSiguiente();
 							contador++;
 						}
@@ -173,7 +173,64 @@ public class Controller {
 
 				break;
 
+				////////////////////////////
+				/////////TODO BOBBY/////////
+				////////////////////////////
 
+			case 5:
+
+				System.out.println("Ingrese la infracción para buscar la primera coincidencia.");
+				dato = lector.next();
+
+				Comparendo compi = modelo.darPrimeroInfraccion(dato);
+
+				if (compi!=null)
+				{
+					System.out.println("El primer comparendo con "+dato+" fue :");
+					System.out.println(compi.darObjectid());
+					System.out.println(compi.darFecha_Hora());
+					System.out.println(compi.darInfraccion());
+					System.out.println(compi.darClase_Vehi());
+					System.out.println(compi.darTipo_Servicio());
+					System.out.println(compi.darLocalidad());
+				}
+				else
+				{
+					System.out.println("No hay ningún comparendo en la infracción dada.");
+				}
+
+				break;
+
+			case 6:
+
+				System.out.println("Ingrese la infracción a buscar");
+				dato = lector.next();
+
+				Comparable[] lista = modelo.CompisInfraccion(dato);
+
+				int i = 0;
+
+				while (i < lista.length)
+				{
+					System.out.println("----------------------------------------------");
+					System.out.println(((Comparendo) lista[i]).darObjectid());
+					System.out.println(((Comparendo) lista[i]).darFecha_Hora());
+					System.out.println(((Comparendo) lista[i]).darInfraccion());
+					System.out.println(((Comparendo) lista[i]).darClase_Vehi());
+					System.out.println(((Comparendo) lista[i]).darTipo_Servicio());
+					System.out.println(((Comparendo) lista[i]).darLocalidad());
+					System.out.println("-----------------------------------------------");
+
+					i++;
+				}
+
+				break;
+
+			case 7:
+
+				ArrayList<String[]> dati =modelo.InfraccionEnTipoServicio();
+
+				break;
 
 			case 11:
 				view.printMessage("--------- \n Hasta pronto !! \n---------"); 

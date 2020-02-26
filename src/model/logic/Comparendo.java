@@ -4,7 +4,7 @@ import com.sun.xml.internal.bind.v2.schemagen.xmlschema.LocalAttribute;
 
 //TODO Ambos
 
-public class Comparendo 
+public class Comparendo implements  Comparable<Comparendo>
 {	
 	private int OBJECTID;
 	private String FECHA_HORA;
@@ -14,10 +14,10 @@ public class Comparendo
 	private String INFRACCION;
 	private String DES_INFRAC;
 	private String LOCALIDAD;
-	
+
 	private double latitud;
 	private double longitud; 
-	
+
 	public Comparendo ()
 	{
 		OBJECTID = 0;
@@ -29,7 +29,7 @@ public class Comparendo
 		DES_INFRAC = "";
 		LOCALIDAD = "";
 	}
-	
+
 	public int darObjectid()
 	{
 		return OBJECTID;
@@ -62,7 +62,7 @@ public class Comparendo
 	{
 		return LOCALIDAD;
 	}
-	
+
 	public void asignarObjectid(int i)
 	{
 		OBJECTID = i;
@@ -95,7 +95,7 @@ public class Comparendo
 	{
 		LOCALIDAD = i;
 	}
-	
+
 	public double darLatitud()
 	{
 		return latitud;
@@ -112,5 +112,48 @@ public class Comparendo
 	{
 		longitud = i; 
 	}
-	
+
+	//TODO Requerimientos Bobby
+
+	public int compareTo(Comparendo compi) 
+	{
+		int año1 = Integer.parseInt(FECHA_HORA.split("/")[0]);
+		int mes1 = Integer.parseInt(FECHA_HORA.split("/")[1]);
+		int dia1 = Integer.parseInt(FECHA_HORA.split("/")[2]);
+
+		int año2 = Integer.parseInt(compi.darFecha_Hora().split("/")[0]);
+		int mes2 = Integer.parseInt(compi.darFecha_Hora().split("/")[1]);
+		int dia2 = Integer.parseInt(compi.darFecha_Hora().split("/")[2]);
+
+		if(año1 > año2)
+		{
+			return 1;
+		}
+		else if(año1 < año2)
+		{
+			return -1;
+		}
+		else if(mes1 > mes2)
+		{
+			return 1;
+		}
+		else if(mes1 < mes2)
+		{
+			return -1;
+		}
+		else if(dia1 > dia2)
+		{
+			return 1;
+		}
+		else if(dia1 < dia2)
+		{
+			return -1;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+
+
 }

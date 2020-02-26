@@ -283,15 +283,9 @@ public class Modelo
 
 	}
 
-
-	// METODOS A TERMINAR PARA LA ENTREGA FINAL //
-
-	public int compareTo(Comparendo Compi)
-	{
-		return 0;
-	}
-
-	//JuanJo
+	///////////////////////////////////////////////////////////////////
+	////////////////////////Comienza JuanJo////////////////////////////
+	///////////////////////////////////////////////////////////////////
 
 	public Comparendo darPrimeroLocalidad (String loca)
 	{
@@ -324,11 +318,11 @@ public class Modelo
 		{
 			if(actual.darInfoDelComparendo().darFecha_Hora().equals(fecha))
 			{
-				
+
 				if (darPos(actual.darInfoDelComparendo().darInfraccion(), codsComparendos)>=0)
 				{
 					pos=darPos(actual.darInfoDelComparendo().darInfraccion(), codsComparendos);
-					
+
 					respuesta.get(pos).enqueue(actual.darInfoDelComparendo());
 				}
 				else
@@ -347,11 +341,11 @@ public class Modelo
 
 		Comparable[] copia = generarCopiaCods(codsComparendos);
 		ordenamientoPorQuickSort(copia);
-		
+
 
 		int k=0,p;
 		ListaEnlazadaQueue<Comparendo> viejo, nuevo;
-		
+
 		while (k<respuesta.size())
 		{
 			String codi=respuesta.get(k).darPrimerElemento().darInfoDelComparendo().darInfraccion();
@@ -559,30 +553,6 @@ public class Modelo
 
 	}
 
-
-
-
-
-
-
-
-	//Bobby
-
-	public Comparendo darPrimeroInfraccion (String infra)
-	{
-		return null;
-	}
-	public ListaEnlazadaQueue<Comparendo> CompisInfraccion (String infra)
-	{
-		return null;
-	}
-	public ArrayList<Comparendo> InfraccionEnTipoServicio()
-	{
-		return null;
-	}
-
-	//Ambos
-
 	public ArrayList<String[]> InfraccionRepetidos(String fechaMin, String fechaMax, String localidad)
 	{
 
@@ -641,9 +611,72 @@ public class Modelo
 		return respuesta;
 	}
 
-
-
 	public ArrayList<Comparendo> InfraccionTopN(int N, String fechaMin, String fechaMax)
+	{
+		return null;
+	}
+
+
+
+	///////////////////////////////////////////////////////////////////
+	////////////////////////Termina JuanJo/////////////////////////////
+	///////////////////////////////////////////////////////////////////
+
+
+
+	///////////////////////////////////////////////////////////////////
+	////////////////////////TODO Comienza Bobby////////////////////////
+	///////////////////////////////////////////////////////////////////
+
+	//TODO Requerimiento 1B
+	public Comparendo darPrimeroInfraccion (String infra)
+	{
+		Node<Comparendo> actual = booty.darPrimerElemento();
+		Comparendo primeroInfra = null;
+		boolean encontro = false;
+
+		while(actual != null && !encontro)
+		{
+			if (actual.darInfoDelComparendo().darInfraccion().equals(infra))
+			{
+				primeroInfra = actual.darInfoDelComparendo();
+				encontro = true;
+			}
+
+			actual = actual.darSiguiente();
+		}
+
+		return primeroInfra;
+	}
+
+
+	//TODO Requerimiento 2B
+	public Comparable[] CompisInfraccion (String infra)
+	{
+		ListaEnlazadaQueue<Comparendo> ListaConInfra = new ListaEnlazadaQueue<>();
+		Node<Comparendo> actual = booty.darPrimerElemento();
+
+		Comparable[] aOrdenar = null;
+		Comparable[] ordenado = null;
+
+		while (actual!=null)
+		{
+			if(actual.darInfoDelComparendo().darInfraccion().equals(infra))
+			{
+				ListaConInfra.enqueue(actual.darInfoDelComparendo());
+			}
+
+			actual=actual.darSiguiente();
+		}
+
+		aOrdenar = copiarComparendosAUsar(ListaConInfra);
+		ordenado = MergeSort(aOrdenar);
+
+		return ordenado;
+	}
+
+	//TODO Requerimiento 3B
+	public ArrayList<String[]> InfraccionEnTipoServicio()
 	{
 		return null;
 	}
@@ -652,15 +685,94 @@ public class Modelo
 		return null;
 	}
 
-	//Util
+	/////////////////////////////////////////////////////////////////////TODO UTIL BOBBY 
 
-	public ArrayList<Comparendo> filtrarInfracciones()
+	//Merge Sort FECHAS BOBBY
+
+	public Comparable[] MergeSort(Comparable[] copia)
 	{
-		return null;
+		Comparable[] auxiliar = new Comparable[copia.length];
+
+		sort_subpartes(copia, 0, copia.length-1, auxiliar);
+
+		return copia;
 	}
-	public void ordenamiento(Comparable[] a)
+
+	private static void sort_subpartes(Comparable[] copia, int low, int height, Comparable[] auxiliar) 
 	{
+		if(height <= low)
+			return;
+
+		int mid = low + (height-low)/2;
+
+		sort_subpartes(copia, low, mid, auxiliar);
+
+		sort_subpartes(copia, mid+1, height, auxiliar);
+
+		merge(copia, low, mid, height, auxiliar);
+	}
+
+	private static void merge(Comparable[] copia, int low, int mid, int height, Comparable[] auxiliar) 
+	{
+		int i = low;
+		int j = mid+1;
+		for (int k = low; k <= height; k++)
+		{
+			auxiliar[k] = copia[k];
+		}
+
+		for (int k = low; k <= height; k++)
+		{
+			if(i > mid)
+			{
+				copia[k] = auxiliar[j++];
+			}
+			else if(j > height)
+			{
+				copia[k] = auxiliar[i++];
+			}
+			else if(less(auxiliar[j], auxiliar[i]))
+			{
+				copia[k] = auxiliar[j++];
+			}
+			else
+			{
+				copia[k] = auxiliar[i++];
+			}
+		}
 
 	}
+
+	public static boolean less(Comparable compi1, Comparable compi2)
+	{
+		return compi1.compareTo(compi2) < 0;
+	}
+
+	/////////////////////////////////////////////////////////////////////TODO UTIL BOBBY 
+
+	//COPIAR DATOS A UN ARREGLO BOBBY
+
+	public Comparable[] copiarComparendosAUsar(ListaEnlazadaQueue<Comparendo> lista)
+	{
+		Comparable[] comparendosCopia = new Comparable[lista.darTamanio()];
+		int contador = 0;
+
+		Node<Comparendo> actual = lista.darPrimerElemento();
+
+		while(actual != null)
+		{
+			Comparendo compi = actual.darInfoDelComparendo();
+			comparendosCopia[contador] = compi;
+
+			contador++;
+			actual = actual.darSiguiente();
+
+		}
+
+		return comparendosCopia;
+	}
+
+
+
 
 }
