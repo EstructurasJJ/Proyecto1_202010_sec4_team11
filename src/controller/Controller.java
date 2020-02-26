@@ -53,16 +53,20 @@ public class Controller {
 				view.printMessage("Clase Vehiculo: " + modelo.UltimoComparendo().darClase_Vehi());
 				view.printMessage("Tipo Servicio: " + modelo.UltimoComparendo().darTipo_Servicio());
 				view.printMessage("Localidad: " + modelo.UltimoComparendo().darLocalidad() + "\n----------");
-
+				
 				break;
 
 			case 2:
-
-				System.out.println("Por favor ingrese la localidad del código a buscar");
-				String a="";
-				dato = lector.next();
-
-				a+=dato;
+				String a="";	
+				System.out.println("Por favor ingrese la localidad del comparendo a buscar. Si son palabras separadas, por favor escriba en una línea diferente cada una");
+				
+				a =lector.next();
+				
+				if (a.equals("SANTA") || a.equals("BARRIOS") || a.equals("CIUDAD")|| a.equals("SAN") || a.equals("BOGOTA")||a.equals("RAFAEL")||a.equals("PUENTE")||a.equals("ANTONIO"))
+				{
+					a=a+ " "+lector.next();
+				}
+					
 
 				Comparendo r=modelo.darPrimeroLocalidad(a);
 
@@ -95,8 +99,8 @@ public class Controller {
 
 				if (cola.size()>0)
 				{
-					int z=0;
-					while (z<cola.size())
+					int z=cola.size()-1;
+					while (z>=0)
 					{
 
 						Node<Comparendo> primero=cola.get(z).darPrimerElemento();
@@ -115,7 +119,7 @@ public class Controller {
 							primero=primero.darSiguiente();
 							contador++;
 						}
-						z++;
+						z--;
 					}
 
 					System.out.println("Se encontraron un total de "+contador+" comparendos");
