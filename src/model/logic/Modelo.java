@@ -3,6 +3,7 @@ package model.logic;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -31,6 +32,9 @@ public class Modelo
 	private double maxLongitud = -1000000000;
 
 	private ListaEnlazadaQueue<Comparendo> booty = new ListaEnlazadaQueue<Comparendo>();
+	
+	static Comparator<Comparendo> infrac = new OrdenarComparendoIfracciones();
+	static Comparator<Comparendo> locali = new OrdenarComparendoLocalidad();
 
 	public Modelo()
 	{
@@ -305,8 +309,6 @@ public class Modelo
 		return null;
 	}
 
-
-
 	public ArrayList<ListaEnlazadaQueue<Comparendo>> CompisFecha (String fecha)
 	{
 		ArrayList<ListaEnlazadaQueue<Comparendo>> respuesta=new ArrayList<ListaEnlazadaQueue<Comparendo>>();
@@ -360,7 +362,6 @@ public class Modelo
 
 		return respuesta;
 	}
-
 
 	public ArrayList<String[]> infraccionEnFechaDada(String fecha1, String fecha2)
 	{
@@ -472,7 +473,6 @@ public class Modelo
 		return copia;
 	}
 
-
 	public static void ordenamientoPorQuickSort(Comparable [] copia)
 	{
 
@@ -489,7 +489,6 @@ public class Modelo
 		quickSort(copia, 0, copia.length-1);
 
 	}
-
 
 	private static void  quickSort(Comparable[] copia, int lo, int hi)
 	{
@@ -516,14 +515,14 @@ public class Modelo
 		exchange(copia,lo,j);
 		return j;
 	}
-
+	
+	//TODO NOS SIRVE A AMBOS
 	public static void exchange(Comparable[] copia, int pos1, int pos2)
 	{
 		Comparable tempo = copia[pos1];
 		copia[pos1] = copia[pos2];
 		copia[pos2] = tempo;
 	}
-
 
 	public int buscarBinarioPorCod( String cod, Comparable[] codsComparendos )
 	{
@@ -616,8 +615,6 @@ public class Modelo
 		return null;
 	}
 
-
-
 	///////////////////////////////////////////////////////////////////
 	////////////////////////Termina JuanJo/////////////////////////////
 	///////////////////////////////////////////////////////////////////
@@ -649,14 +646,13 @@ public class Modelo
 		return primeroInfra;
 	}
 
-
 	//TODO Requerimiento 2B
 	public Comparable[] CompisInfraccion (String infra)
 	{
 		ListaEnlazadaQueue<Comparendo> ListaConInfra = new ListaEnlazadaQueue<>();
 		Node<Comparendo> actual = booty.darPrimerElemento();
 
-		Comparable[] aOrdenar = null;
+		Comparendo[] aOrdenar = null;
 		Comparable[] ordenado = null;
 
 		while (actual!=null)
@@ -669,8 +665,8 @@ public class Modelo
 			actual=actual.darSiguiente();
 		}
 
-		aOrdenar = copiarComparendosAUsar(ListaConInfra);
-		ordenado = MergeSort(aOrdenar);
+		aOrdenar = copiarComparendosAComparendo(ListaConInfra);
+		ordenado = shell_sort_Fecha(aOrdenar);
 
 		return ordenado;
 	}
@@ -678,101 +674,357 @@ public class Modelo
 	//TODO Requerimiento 3B
 	public ArrayList<String[]> InfraccionEnTipoServicio()
 	{
-		return null;
-	}
-	public ArrayList<Comparendo> Histograma()
-	{
-		return null;
-	}
-
-	/////////////////////////////////////////////////////////////////////TODO UTIL BOBBY 
-
-	//Merge Sort FECHAS BOBBY
-
-	public Comparable[] MergeSort(Comparable[] copia)
-	{
-		Comparable[] auxiliar = new Comparable[copia.length];
-
-		sort_subpartes(copia, 0, copia.length-1, auxiliar);
-
-		return copia;
-	}
-
-	private static void sort_subpartes(Comparable[] copia, int low, int height, Comparable[] auxiliar) 
-	{
-		if(height <= low)
-			return;
-
-		int mid = low + (height-low)/2;
-
-		sort_subpartes(copia, low, mid, auxiliar);
-
-		sort_subpartes(copia, mid+1, height, auxiliar);
-
-		merge(copia, low, mid, height, auxiliar);
-	}
-
-	private static void merge(Comparable[] copia, int low, int mid, int height, Comparable[] auxiliar) 
-	{
-		int i = low;
-		int j = mid+1;
-		for (int k = low; k <= height; k++)
+		//Recibo el arreglo y lo ordeno
+		
+		Comparendo[] aOrdenar = null;	
+		Comparable[] ordenado = null;
+				
+		aOrdenar = copiarComparendos();
+		ordenado = shell_sort_Infraccion(aOrdenar);
+		
+		//Donde voy a guardar la info
+		String[] arreglo = new String[3];
+		ArrayList<String[]> respuesta=new ArrayList<String[]>();
+		
+		//Recorro todo el arreglo
+		
+		int conta = 0;
+		
+		while (conta < ordenado.length)
 		{
-			auxiliar[k] = copia[k];
-		}
+			boolean nextCod = false;
+			int pos = conta;
+			
+			String Codigo = "";
+			
+			int particular = 0;
+			int publico = 0;
+			
+			//Mientras este en el mismo codigo
+			
+			while(!nextCod)
+			{
+				//Ultimo dato para que no se desborde.
+				
+				if(pos+1 >= ordenado.length)
+				{
+					nextCod = true;
+					conta = ordenado.length + ordenado.length;
+					String Cod1 = ((Comparendo) ordenado[pos]).darInfraccion();
+					
+					//Verifico si cumplen el último
+					
+					if (((Comparendo) ordenado[pos]).darTipo_Servicio().equals("Particular"))
+					{
+						particular++;
+					}
+					
+					if (((Comparendo) ordenado[pos]).darTipo_Servicio().equals("PÃºblico"))
+					{
+						publico++;
+					}
+					
+					Codigo = Cod1;
+				}
+				
+				//Resto de datos
+				else
+				{
+					//Accedo a los codigos
+					
+					String Cod1 = ((Comparendo) ordenado[pos]).darInfraccion();
+					String Cod2 = ((Comparendo) ordenado[pos+1]).darInfraccion();
+					
+					//Verifico si cumplen
+					
+					if (((Comparendo) ordenado[pos]).darTipo_Servicio().equals("Particular"))
+					{
+						particular++;
+					}
+					
+					if (((Comparendo) ordenado[pos]).darTipo_Servicio().equals("PÃºblico"))
+					{
+						publico++;
+					}
+					
+					//Avanzo al siguiente codigo
+					
+					pos++;
+					
+					//Reviso si tengo que salir al siguiente
+					
+					if (!Cod1.equals(Cod2))
+					{
+						nextCod = true;
+						conta = pos;
+						Codigo = Cod1;
+					}
+				}
 
-		for (int k = low; k <= height; k++)
-		{
-			if(i > mid)
-			{
-				copia[k] = auxiliar[j++];
 			}
-			else if(j > height)
+			
+			if (particular != 0 | publico != 0)
 			{
-				copia[k] = auxiliar[i++];
+				arreglo = new String[3];
+				
+				arreglo[0]= Codigo;
+				arreglo[1]= "" + particular;
+				arreglo[2]= "" + publico;
+				
+				respuesta.add(arreglo);
+				
+				
+				//System.out.println(Codigo + "  |" + particular + "  |" + publico);
 			}
-			else if(less(auxiliar[j], auxiliar[i]))
-			{
-				copia[k] = auxiliar[j++];
-			}
-			else
-			{
-				copia[k] = auxiliar[i++];
-			}
+			
 		}
-
+		
+		
+		return respuesta;
+		
 	}
 
-	public static boolean less(Comparable compi1, Comparable compi2)
+	//TODO Requerimiento 3C
+	public ArrayList<String[]> Histograma()
 	{
-		return compi1.compareTo(compi2) < 0;
+		//Recibo el arreglo y lo ordeno
+		
+		Comparendo[] aOrdenar = null;	
+		Comparable[] ordenado = null;
+				
+		aOrdenar = copiarComparendos();
+		ordenado = shell_sort_Localidad(aOrdenar);
+		
+		//Donde voy a guardar la info
+		String[] arreglo = new String[2];
+		ArrayList<String[]> respuesta=new ArrayList<String[]>();
+		
+		//Recorro todo el arreglo
+		
+		int conta = 0;
+		
+		while (conta < ordenado.length)
+		{
+			boolean nextCod = false;
+			int pos = conta;
+			
+			String Localidad = "";
+			
+			int numInfra = 0;
+			
+			//Mientras este en el mismo codigo
+			
+			while(!nextCod)
+			{
+				//Ultimo dato para que no se desborde.
+				
+				if(pos+1 >= ordenado.length)
+				{
+					nextCod = true;
+					conta = ordenado.length + ordenado.length;
+					String Loca1 = ((Comparendo) ordenado[pos]).darLocalidad();
+					
+					//Tiene comparendo
+					numInfra++;
+					Localidad = Loca1;
+				}
+				
+				//Resto de datos
+				else
+				{
+					//Accedo a los codigos
+					
+					String Loca1 = ((Comparendo) ordenado[pos]).darLocalidad();
+					String Loca2 = ((Comparendo) ordenado[pos+1]).darLocalidad();
+					
+					//Tiene comparendo
+					numInfra++;
+					
+					//Avanzo al siguiente codigo
+					
+					pos++;
+					
+					//Reviso si tengo que salir al siguiente
+					
+					if (!Loca1.equals(Loca2))
+					{
+						nextCod = true;
+						conta = pos;
+						Localidad = Loca1;
+					}
+				}
+
+			}
+			
+			if (numInfra != 0)
+			{
+				
+				numInfra = (numInfra/50)+1;
+				String aste = "";
+				
+				for(int i = 0; i < numInfra; i++)
+				{
+					aste = aste + "*";
+				}
+				
+				arreglo = new String[2];
+				
+				arreglo[0]= Localidad;
+				arreglo[1]= "" + aste;
+				
+				respuesta.add(arreglo);
+				
+				//System.out.println(Localidad + "--| " + aste + "  ");
+			}
+			
+		}
+		
+		return respuesta;
+		
 	}
+
 
 	/////////////////////////////////////////////////////////////////////TODO UTIL BOBBY 
 
 	//COPIAR DATOS A UN ARREGLO BOBBY
-
-	public Comparable[] copiarComparendosAUsar(ListaEnlazadaQueue<Comparendo> lista)
+	
+	public Comparendo[] copiarComparendosAComparendo(ListaEnlazadaQueue<Comparendo> listaConInfra)
 	{
-		Comparable[] comparendosCopia = new Comparable[lista.darTamanio()];
+		Comparendo[] comparendosCopia = new Comparendo[listaConInfra.darTamanio()];
 		int contador = 0;
-
-		Node<Comparendo> actual = lista.darPrimerElemento();
-
+		
+		Node<Comparendo> actual = listaConInfra.darPrimerElemento();
+		
 		while(actual != null)
 		{
 			Comparendo compi = actual.darInfoDelComparendo();
 			comparendosCopia[contador] = compi;
-
+			
 			contador++;
 			actual = actual.darSiguiente();
-
+			
 		}
-
+		
 		return comparendosCopia;
 	}
+	
+	public Comparendo[] copiarComparendos()
+	{
+		Comparendo[] comparendosCopia = new Comparendo[booty.darTamanio()];
+		int contador = 0;
+		
+		Node<Comparendo> actual = booty.darPrimerElemento();
+		
+		while(actual != null)
+		{
+			Comparendo compi = actual.darInfoDelComparendo();
+			comparendosCopia[contador] = compi;
+			
+			contador++;
+			actual = actual.darSiguiente();
+			
+		}
+		
+		return comparendosCopia;
+	}
+	/////////////////////////////////////////////////////////////////////TODO UTIL BOBBY 
+	
+	//Ordenar por codigo de fecha, infracción y localidad. 
+	
+	public static boolean less(Comparable compi1, Comparable compi2)
+	{
+		return compi1.compareTo(compi2) < 0;
+	}
+	
+	public static int lessInfraccion(Comparendo compi1, Comparendo compi2)
+	{
+		return infrac.compare(compi1, compi2);
+	}
 
+	public static int lessLocalidad(Comparendo compi1, Comparendo compi2)
+	{
+		return locali.compare(compi1, compi2);
+	}
+	
+	public Comparable[] shell_sort_Fecha(Comparendo[] copia)
+	{
+		int N = copia.length;
+		int h = 1;
+		
+		while(h < N/3)
+		{
+			h = 3*h +1;
+		}
+		
+		while(h>=1)
+		{
+			for (int i = h; i < N; i++)
+			{
+				for(int j = i; j>=h && less(copia[j], copia[j-h]); j = j -h)
+				{
+					exchange(copia,j,j-h);
+				}
+			}
+			
+			h = h/3;
+		}
+		
+		return copia;
+		
+	}
 
-
+	public Comparable[] shell_sort_Infraccion(Comparendo[] copia)
+	{
+		int N = copia.length;
+		int h = 1;
+		
+		while(h < N/3)
+		{
+			h = 3*h +1;
+		}
+		
+		while(h>=1)
+		{
+			for (int i = h; i < N; i++)
+			{
+				for(int j = i; j>=h && lessInfraccion(copia[j], copia[j-h]) < 0; j = j -h)
+				{
+					exchange(copia,j,j-h);
+				}
+			}
+			
+			h = h/3;
+		}
+		
+		return copia;
+		
+	}
+	
+	public Comparable[] shell_sort_Localidad(Comparendo[] copia)
+	{
+		int N = copia.length;
+		int h = 1;
+		
+		while(h < N/3)
+		{
+			h = 3*h +1;
+		}
+		
+		while(h>=1)
+		{
+			for (int i = h; i < N; i++)
+			{
+				for(int j = i; j>=h && lessLocalidad(copia[j], copia[j-h]) < 0; j = j -h)
+				{
+					exchange(copia,j,j-h);
+				}
+			}
+			
+			h = h/3;
+		}
+		
+		return copia;
+		
+	}
 
 }

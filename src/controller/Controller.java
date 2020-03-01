@@ -57,6 +57,7 @@ public class Controller {
 				break;
 
 			case 2:
+				
 				String a="";	
 				System.out.println("Por favor ingrese la localidad del comparendo a buscar. Si son palabras separadas, por favor escriba en una línea diferente cada una");
 				
@@ -231,8 +232,35 @@ public class Controller {
 				break;
 
 			case 7:
+				
+				ArrayList<String[]> datInfracciones = modelo.InfraccionEnTipoServicio();
 
-				ArrayList<String[]> dati =modelo.InfraccionEnTipoServicio();
+				System.out.println("Infracción            |Particular            |Público");
+				
+				int infra = 0;
+				while (infra < datInfracciones.size())
+				{
+					System.out.println(datInfracciones.get(infra)[0] + "            |" + datInfracciones.get(infra)[1] + "              |" + datInfracciones.get(infra)[2]);
+					infra++;
+				}
+
+				view.printMessage("\n----------");
+
+				break;
+				
+			case 10:
+				
+				datInfracciones = modelo.Histograma();
+				
+				int loca = 0;
+				while (loca < datInfracciones.size())
+				{
+					System.out.println(datInfracciones.get(loca)[0] + "  ---|" + datInfracciones.get(loca)[1]);
+					loca++;
+				}
+
+				view.printMessage("\n----------");
+
 
 				break;
 
