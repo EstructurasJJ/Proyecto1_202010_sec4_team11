@@ -35,6 +35,25 @@ public class TestModelo {
 		assertEquals(20, conexion.darTamanio());
 	}
 	
+	
+	////////////////////////////////////////////////////////////////////TODO JUANJO
+	
+	@Test
+	public void testDarPrimeroEnLocalidad()
+	{
+		setUp();
+		Comparendo respuesta=conexion.darPrimeroLocalidad("BARRIOS UNIDOS");
+		assertEquals("No es la esperada",29042,respuesta.darObjectid());
+		
+		respuesta=conexion.darPrimeroLocalidad("ENGATIVA");
+		assertEquals("No es la esperada",209146,respuesta.darObjectid());
+		
+		respuesta=conexion.darPrimeroLocalidad("MARTIRES");
+		assertEquals("No es la esperada",56712,respuesta.darObjectid());
+	}
+	
+	
+	
 	/////////////////////////////////////////////////////////////////////TODO BOBBY 
 	
 	//TODO Requerimiento 1B

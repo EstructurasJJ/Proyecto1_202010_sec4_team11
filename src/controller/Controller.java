@@ -39,7 +39,7 @@ public class Controller {
 			switch(option)
 			{
 			case 1:
-				modelo.leerGeoJson(RUTAGEOJASON);
+				modelo.leerGeoJson(JUEGUEMOS);
 
 				view.printMessage("Archivo GeoJSon Cargado");
 				view.printMessage("Numero actual de comparendos " + modelo.darTamanio() + "\n----------");
@@ -53,21 +53,20 @@ public class Controller {
 				view.printMessage("Clase Vehiculo: " + modelo.UltimoComparendo().darClase_Vehi());
 				view.printMessage("Tipo Servicio: " + modelo.UltimoComparendo().darTipo_Servicio());
 				view.printMessage("Localidad: " + modelo.UltimoComparendo().darLocalidad() + "\n----------");
-				
+
 				break;
 
 			case 2:
-				
+
 				String a="";	
 				System.out.println("Por favor ingrese la localidad del comparendo a buscar. Si son palabras separadas, por favor escriba en una línea diferente cada una");
-				
+
 				a =lector.next();
-				
+
 				if (a.equals("SANTA") || a.equals("BARRIOS") || a.equals("CIUDAD")|| a.equals("SAN") || a.equals("BOGOTA")||a.equals("RAFAEL")||a.equals("PUENTE")||a.equals("ANTONIO"))
 				{
 					a=a+ " "+lector.next();
 				}
-					
 
 				Comparendo r=modelo.darPrimeroLocalidad(a);
 
@@ -89,41 +88,30 @@ public class Controller {
 				break;
 
 			case 3:
-
-				int contador=0;
 				System.out.println("Por favor ingrese la fecha");
 
 				dato = lector.next();
 
 
-				ArrayList<ListaEnlazadaQueue<Comparendo>> cola=modelo.CompisFecha(dato);
-
-				if (cola.size()>0)
+				Comparable[] compisEnFecha=modelo.CompisFecha(dato);
+				if (compisEnFecha.length>0)
 				{
-					int z=cola.size()-1;
-					while (z>=0)
+					int x=compisEnFecha.length-1;
+					while (x>=0)
 					{
+						System.out.println("----------------------------------------------");
+						System.out.println(((Comparendo)compisEnFecha[x]).darObjectid());
+						System.out.println(((Comparendo)compisEnFecha[x]).darFecha_Hora());
+						System.out.println(((Comparendo)compisEnFecha[x]).darInfraccion());
+						System.out.println(((Comparendo)compisEnFecha[x]).darClase_Vehi());
+						System.out.println(((Comparendo)compisEnFecha[x]).darTipo_Servicio());
+						System.out.println(((Comparendo)compisEnFecha[x]).darLocalidad());
+						System.out.println("------------------------------------------------");
 
-						Node<Comparendo> primero=cola.get(z).darPrimerElemento();
-
-						while(primero!=null)
-						{
-							System.out.println("----------------------------------------------");
-							System.out.println(primero.darInfoDelComparendo().darObjectid());
-							System.out.println(primero.darInfoDelComparendo().darFecha_Hora());
-							System.out.println(primero.darInfoDelComparendo().darInfraccion());
-							System.out.println(primero.darInfoDelComparendo().darClase_Vehi());
-							System.out.println(primero.darInfoDelComparendo().darTipo_Servicio());
-							System.out.println(primero.darInfoDelComparendo().darLocalidad());
-							System.out.println("------------------------------------------------");
-
-							primero=primero.darSiguiente();
-							contador++;
-						}
-						z--;
+						x--;
 					}
 
-					System.out.println("Se encontraron un total de "+contador+" comparendos");
+					System.out.println("Se encontraron un total de "+compisEnFecha.length+" comparendos");
 				}
 				else
 				{
@@ -157,7 +145,12 @@ public class Controller {
 			case 8:
 
 				System.out.println("Ingrese la localidad a buscar");
-				dato = lector.next();
+				dato =lector.next();
+
+				if (dato.equals("SANTA") || dato.equals("BARRIOS") || dato.equals("CIUDAD")|| dato.equals("SAN") || dato.equals("BOGOTA")||dato.equals("RAFAEL")||dato.equals("PUENTE")||dato.equals("ANTONIO"))
+				{
+					dato=dato+ " "+lector.next();
+				}
 
 				System.out.println("Ingrese la fecha 1 del intervalo");
 				String fecha1 = lector.next();
@@ -168,16 +161,56 @@ public class Controller {
 
 				System.out.println("Infracción  |   Comparendos");
 
-				int b=0;
-
-				while (b<resp.size())
+				if (!resp.get(0)[0].equals(""))
 				{
-					System.out.println(resp.get(b)[0]+"         | "+resp.get(b)[1]);
-					b++;
-				}
+					int b=0;
 
+					while (b<resp.size())
+					{
+						System.out.println(resp.get(b)[0]+"         | "+resp.get(b)[1]);
+						b++;
+					}
+				}
 				break;
 
+				
+			case 9:
+				
+				System.out.println("Ingrese los N comparendos a mostrar");
+
+				int ndato=lector.nextInt();
+				
+				System.out.println("Ingrese la primera fecha");
+				fecha1=lector.next();
+				
+				System.out.println("Ingrese la segunda fecha");
+				fecha2=lector.next();
+				
+				ArrayList<String[]> r9= modelo.InfraccionTopN(ndato, fecha1, fecha2);
+				
+				if (r9.get(0)[0]!="")
+				{
+					System.out.println("Código     | #Comparendos");
+					
+					int s20=0;
+					
+					while (s20<r9.size())
+					{
+						System.out.println(r9.get(s20)[0]+"        | "+r9.get(s20)[1]);
+						s20++;
+					}
+				}
+				else
+				{
+					System.out.println("No hay comparendos dentro de las fechas especificada");
+				}
+				
+				
+				
+				
+				
+				
+				break;
 				////////////////////////////
 				/////////TODO BOBBY/////////
 				////////////////////////////
@@ -232,11 +265,11 @@ public class Controller {
 				break;
 
 			case 7:
-				
+
 				ArrayList<String[]> datInfracciones = modelo.InfraccionEnTipoServicio();
 
 				System.out.println("Infracción            |Particular            |Público");
-				
+
 				int infra = 0;
 				while (infra < datInfracciones.size())
 				{
@@ -247,11 +280,11 @@ public class Controller {
 				view.printMessage("\n----------");
 
 				break;
-				
+
 			case 10:
-				
+
 				datInfracciones = modelo.Histograma();
-				
+
 				int loca = 0;
 				while (loca < datInfracciones.size())
 				{
