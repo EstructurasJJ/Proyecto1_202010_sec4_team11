@@ -39,7 +39,7 @@ public class Controller {
 			switch(option)
 			{
 			case 1:
-				modelo.leerGeoJson(JUEGUEMOS);
+				modelo.leerGeoJson(RUTAGEOJASON);
 
 				view.printMessage("Archivo GeoJSon Cargado");
 				view.printMessage("Numero actual de comparendos " + modelo.darTamanio() + "\n----------");
