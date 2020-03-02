@@ -22,7 +22,7 @@ public class View
 		System.out.println("6. Consultar los comparendos de una infracción dada");
 		System.out.println("7. Imprimir los comparendo por tipo de servicio.");
 		System.out.println("8. Dar el número de comparendos entre dos fechas, dada una localidad");
-		System.out.println("9. Requerimiento 2 ambos");
+		System.out.println("9. Mostrar los N mayores comparendos entre dos fechas.");
 		System.out.println("10. Histograma");
 		System.out.println("11. Salir");
 		System.out.println("Dar el numero de opcion a resolver, luego oprimir tecla Return: (e.g., 1):");
