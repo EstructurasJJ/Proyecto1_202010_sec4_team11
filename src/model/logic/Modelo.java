@@ -556,45 +556,38 @@ public class Modelo
 		parcial[1]=numComparendos+"";
 		estaEs.add(parcial);
 		
-		int r=0;
 		
-		while (r<estaEs.size())
+		int r=0;
+		int pos;
+		int max;
+		while(N>0)
 		{
-			if(estaEsLaVerdadera.size()<N)
+			if (estaEs.size()>0)
 			{
-				estaEsLaVerdadera.add(estaEs.get(r));
-			}
-			
-			int k=estaEsLaVerdadera.size()-1;
-			int pos=-1;
-			
-			while(k>=0)
-			{				
-				if(Integer.parseInt(estaEs.get(r)[1])>Integer.parseInt(estaEsLaVerdadera.get(k)[1]))
+				r=0;
+				pos=0;
+				max=0;
+				while (r<estaEs.size())
 				{
-					pos=k;			
-				}
-				k--;
-			}
-			
-			if (pos>=0)
-			{
-				while (pos+1<estaEsLaVerdadera.size())
-				{
-					String[] aux=estaEsLaVerdadera.get(pos);
-					String[] aux2=estaEsLaVerdadera.get(pos+1);
-					estaEsLaVerdadera.set(pos, aux2);
-					estaEsLaVerdadera.set(pos+1, aux);
+					if (Integer.parseInt(estaEs.get(r)[1])>max)
+					{
+						pos=r;
+						max=Integer.parseInt(estaEs.get(r)[1]);
+					}
 					
-					pos++;
+					r++;
 				}
+				
+				estaEsLaVerdadera.add(estaEs.get(pos));
+				estaEs.remove(pos);
+				
 			}
 			
-			
-			r++;
+			N--;
 		}
 		
-		
+
+
 
 		return estaEsLaVerdadera;
 	}
