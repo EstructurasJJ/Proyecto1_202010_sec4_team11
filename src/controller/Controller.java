@@ -136,7 +136,7 @@ public class Controller {
 
 				while (k<datos.size())
 				{
-					System.out.println(datos.get(k)[0]+"            |"+datos.get(k)[1]+"              |"+datos.get(k)[2]);
+					System.out.println(datos.get(k)[0]+"                 "+datos.get(k)[1]+"                "+datos.get(k)[2]);
 					k++;
 				}
 
