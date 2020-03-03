@@ -493,6 +493,7 @@ public class Modelo
 
 	//////////////////////////////////REUQERIMIENTO 2C////////////////////////////////////
 
+	
 	public ArrayList<String[]> InfraccionTopN(int N, String fechaMin, String fechaMax)
 	{
 		ListaEnlazadaQueue<Comparendo> respuesta=new ListaEnlazadaQueue<Comparendo>();
