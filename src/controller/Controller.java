@@ -39,7 +39,7 @@ public class Controller {
 			switch(option)
 			{
 			case 1:
-				modelo.leerGeoJson(RUTAGEOJASON);
+				modelo.leerGeoJson(JUEGUEMOS);
 
 				view.printMessage("Archivo GeoJSon Cargado");
 				view.printMessage("Numero actual de comparendos " + modelo.darTamanio() + "\n----------");
@@ -129,8 +129,15 @@ public class Controller {
 				String dato2=lector.next();
 
 				ArrayList<String[]> datos=modelo.infraccionEnFechaDada(dato, dato2);
-
-				System.out.println("Infracción     |   "+dato+"   |   "+dato2);
+				if (datos.size()>0)
+				{
+					System.out.println("Infracción     |   "+dato+"   |   "+dato2);
+				}
+				else
+				{
+					System.out.println("No hay comparendos entre las fechas dadas");
+				}
+				
 
 				int k=0;
 
@@ -159,7 +166,14 @@ public class Controller {
 
 				ArrayList<String[]> resp=modelo.InfraccionRepetidos(fecha1, fecha2, dato);
 
-				System.out.println("Infracción  |   Comparendos");
+				if(resp.get(0)[0]!="")
+				{
+					System.out.println("Infracción  |   Comparendos");
+				}
+				{
+					System.out.println("No se encontraron comparendos");
+				}
+				
 
 				if (!resp.get(0)[0].equals(""))
 				{

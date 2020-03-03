@@ -41,6 +41,7 @@ public class TestModelo {
 	@Test
 	public void testDarPrimeroEnLocalidad()
 	{
+		//Requerimiento 1A
 		setUp();
 		Comparendo respuesta=conexion.darPrimeroLocalidad("BARRIOS UNIDOS");
 		assertEquals("No es la esperada",29042,respuesta.darObjectid());
@@ -50,6 +51,71 @@ public class TestModelo {
 		
 		respuesta=conexion.darPrimeroLocalidad("MARTIRES");
 		assertEquals("No es la esperada",56712,respuesta.darObjectid());
+	}
+	
+	
+	@Test
+	public void darComparendosEnFecha()
+	{
+		setUp();
+		Comparable[] respuesta=conexion.CompisFecha("2018/01/17");
+		assertEquals("No corresponde al valor esperado", ((Comparendo)respuesta[0]).darObjectid(),519553);
+		assertEquals("No corresponde al valor esperado", ((Comparendo)respuesta[1]).darObjectid(),509329);
+		
+	}
+	
+	@Test 
+	public void compararPorFecha()
+	{
+		setUp();
+		ArrayList<String[]> respuesta = conexion.infraccionEnFechaDada("2018/01/17", "2018/12/10");
+		
+		assertEquals("No corresponde", respuesta.get(0)[0],"B02");
+		assertEquals("No corresponde", respuesta.get(0)[1],"1");
+		assertEquals("No corresponde", respuesta.get(0)[2],"0");
+		
+		assertEquals("No corresponde", respuesta.get(1)[0],"C02");
+		assertEquals("No corresponde", respuesta.get(1)[1],"0");
+		assertEquals("No corresponde", respuesta.get(1)[2],"1");
+		
+		assertEquals("No corresponde", respuesta.get(2)[0],"C35");
+		assertEquals("No corresponde", respuesta.get(2)[1],"1");
+		assertEquals("No corresponde", respuesta.get(2)[2],"0");
+	}
+	
+	
+	//Test para requerimientos en equipo///////////////////////////////////////
+	@Test
+	public void testLocalidadEntreFechas()
+	{
+		setUp();
+		ArrayList<String[]> respuesta = conexion.InfraccionRepetidos("2018/01/01", "2018/12/31", "BOSA");
+		
+		assertEquals("No corresponde", respuesta.get(0)[0],"B02");
+		assertEquals("No corresponde", respuesta.get(0)[1],"2");
+		
+		assertEquals("No corresponde", respuesta.get(1)[0],"C02");
+		assertEquals("No corresponde", respuesta.get(1)[1],"1");
+		
+	}
+	
+	@Test
+	public void testDarNMax()
+	{
+		ArrayList<String[]> respuesta = conexion.InfraccionTopN(10, "2018/01/01", "2018/12/31");
+		
+		assertEquals("No corresponde", respuesta.get(0)[0],"C02");
+		assertEquals("No corresponde", respuesta.get(0)[1],"9");
+		
+		assertEquals("No corresponde", respuesta.get(2)[0],"C14");
+		assertEquals("No corresponde", respuesta.get(2)[1],"2");
+		
+		assertEquals("No corresponde", respuesta.get(5)[0],"C32");
+		assertEquals("No corresponde", respuesta.get(5)[1],"1");
+		
+		assertEquals("No corresponde", respuesta.get(9)[0],"H03");
+		assertEquals("No corresponde", respuesta.get(9)[1],"1");
+		
 	}
 	
 	
